@@ -171,7 +171,7 @@ class FavoritesPage extends StatelessWidget {
           ListTile(
             title: Text(f.asLowerCase),
             leading: Icon(Icons.favorite),
-          )
+          ),
       ],
     );
   }

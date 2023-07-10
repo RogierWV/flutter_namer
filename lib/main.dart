@@ -160,19 +160,21 @@ class FavoritesPage extends StatelessWidget {
       );
     }
 
-    return ListView(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(20),
-          child: Text('You have '
-              '${appState.favorites.length} favorites:'),
-        ),
-        for (var f in appState.favorites)
-          ListTile(
-            title: Text(f.asLowerCase),
-            leading: Icon(Icons.favorite),
+    return SelectionArea(
+      child: ListView(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Text('You have '
+                '${appState.favorites.length} favorites:'),
           ),
-      ],
+          for (var f in appState.favorites)
+            ListTile(
+              title: Text(f.asLowerCase),
+              leading: Icon(Icons.favorite),
+            ),
+        ],
+      ),
     );
   }
 }
@@ -196,7 +198,7 @@ class BigCard extends StatelessWidget {
       color: theme.colorScheme.primary,
       child: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Text(
+        child: SelectableText(
           pair.asLowerCase,
           style: style,
           semanticsLabel: "${pair.first} ${pair.second}",

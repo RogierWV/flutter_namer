@@ -1,8 +1,13 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(WordPairAdapter());
+  await Hive.openBox<WordPair>("current");
+  await Hive.openBox<List>("favorites");
   runApp(MyApp());
 }
 
@@ -25,15 +30,59 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class WordPairAdapter extends TypeAdapter<WordPair> {
+  @override
+  final typeId = 0;
+
+  @override
+  WordPair read(BinaryReader reader) {
+    return WordPair(reader.readString(), reader.readString());
+  }
+
+  @override
+  void write(BinaryWriter writer, WordPair obj) {
+    writer.writeString(obj.first);
+    writer.writeString(obj.second);
+  }
+}
+
 class MyAppState extends ChangeNotifier {
-  var current = WordPair.random();
+  // var _current = WordPair.random();
+
+  WordPair get current {
+    var ret = Hive.box<WordPair>("current").get("current");
+    if (ret == null) {
+      var wp = WordPair.random();
+      Hive.box<WordPair>("current").put("current", wp);
+      return wp;
+    }
+    return ret;
+  }
+
+  set current(WordPair c) {
+    Hive.box<WordPair>("current").put("current", c);
+  }
 
   void getNext() {
     current = WordPair.random();
     notifyListeners();
   }
 
-  var favorites = <WordPair>[];
+  // var favorites = <WordPair>[];
+
+  List<WordPair> get favorites {
+    var ret = Hive.box<List>("favorites").get("favorites")?.cast<WordPair>();
+    if (ret == null) {
+      var l = <WordPair>[];
+      Hive.box<List>("favorites").put("favorites", l);
+      return l;
+    }
+    return ret;
+  }
+
+  set favorites(List<WordPair> l) {
+    Hive.box<List>("favorites").put("favorites", l);
+  }
 
   void toggleFavorite() {
     if (favorites.contains(current)) {
@@ -41,6 +90,7 @@ class MyAppState extends ChangeNotifier {
     } else {
       favorites.add(current);
     }
+    favorites = favorites;
     notifyListeners();
   }
 }

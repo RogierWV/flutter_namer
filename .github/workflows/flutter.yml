@@ -21,7 +21,7 @@ jobs:
       - run: | 
           flutter pub get
           flutter build web
-          tar -czvf github-pages.tar.gz build/web
+          cp -r build/web _site
       - name: Configure pages
         uses: actions/configure-pages@v3
       - name: Upload pages artifacts

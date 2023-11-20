@@ -5,7 +5,9 @@ on:
       - main
   push: 
     branches:
-      - main
+      - main     
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest

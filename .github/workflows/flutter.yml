@@ -23,7 +23,6 @@ jobs:
       - run: | 
           flutter pub get
           flutter build web
-          sed -i "s|<base href=\".*\">|<base href=\"/flutter_namer/\">|g" build/web/index.html
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
